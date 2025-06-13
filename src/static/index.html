@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Controle de Vendas de Livraria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-book me-2"></i>
+                Livraria Sistema
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-page="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="livros">Livros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="clientes">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="vendas">Vendas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-page="relatorios">Relatórios</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Página Home -->
+        <div id="home" class="page active">
+            <div class="jumbotron">
+                <h1 class="display-4">Sistema de Controle de Vendas de Livraria</h1>
+                <p class="lead">Bem-vindo ao sistema de gerenciamento de vendas para livrarias.</p>
+                <hr class="my-4">
+                <p>Este sistema permite o controle completo de livros, clientes, vendas e estoque da sua livraria.</p>
+                
+                <div class="row mt-5">
+                    <div class="col-md-3">
+                        <div class="card text-center mb-4">
+                            <div class="card-body">
+                                <i class="bi bi-book display-4 text-primary"></i>
+                                <h5 class="card-title mt-3">Livros</h5>
+                                <p class="card-text">Gerencie o catálogo de livros</p>
+                                <button class="btn btn-primary" data-navigate="livros">Acessar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center mb-4">
+                            <div class="card-body">
+                                <i class="bi bi-people display-4 text-success"></i>
+                                <h5 class="card-title mt-3">Clientes</h5>
+                                <p class="card-text">Cadastro e gestão de clientes</p>
+                                <button class="btn btn-success" data-navigate="clientes">Acessar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center mb-4">
+                            <div class="card-body">
+                                <i class="bi bi-cart-check display-4 text-danger"></i>
+                                <h5 class="card-title mt-3">Vendas</h5>
+                                <p class="card-text">Registre e consulte vendas</p>
+                                <button class="btn btn-danger" data-navigate="vendas">Acessar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center mb-4">
+                            <div class="card-body">
+                                <i class="bi bi-bar-chart display-4 text-info"></i>
+                                <h5 class="card-title mt-3">Relatórios</h5>
+                                <p class="card-text">Visualize dados e estatísticas</p>
+                                <button class="btn btn-info" data-navigate="relatorios">Acessar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página Livros -->
+        <div id="livros" class="page">
+            <h2>Gerenciamento de Livros</h2>
+            <div class="d-flex justify-content-between mb-3">
+                <button id="btnNovoLivro" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Novo Livro
+                </button>
+                <div class="input-group w-50">
+                    <input type="text" id="searchLivro" class="form-control" placeholder="Buscar livro...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ISBN</th>
+                            <th>Título</th>
+                            <th>Ano</th>
+                            <th>Gênero</th>
+                            <th>Editora</th>
+                            <th>Preço</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="livrosTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center">Carregando livros...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Modal para Adicionar/Editar Livro -->
+            <div class="modal fade" id="livroModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="livroModalLabel">Novo Livro</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="livroForm">
+                                <div class="mb-3">
+                                    <label for="isbn" class="form-label">ISBN</label>
+                                    <input type="text" class="form-control" id="isbn" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="titulo" class="form-label">Título</label>
+                                    <input type="text" class="form-control" id="titulo" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="ano" class="form-label">Ano de Publicação</label>
+                                    <input type="number" class="form-control" id="ano" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="genero" class="form-label">Gênero</label>
+                                    <select class="form-select" id="genero" required>
+                                        <option value="">Selecione um gênero</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editora" class="form-label">Editora</label>
+                                    <select class="form-select" id="editora" required>
+                                        <option value="">Selecione uma editora</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="preco" class="form-label">Preço de Venda</label>
+                                    <input type="number" step="0.01" class="form-control" id="preco" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" id="salvarLivro">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Página Clientes -->
+        <div id="clientes" class="page">
+            <h2>Gerenciamento de Clientes</h2>
+            <div class="d-flex justify-content-between mb-3">
+                <button id="btnNovoCliente" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Novo Cliente
+                </button>
+                <div class="input-group w-50">
+                    <input type="text" id="searchCliente" class="form-control" placeholder="Buscar cliente...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>CPF</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Cidade/UF</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientesTableBody">
+                        <tr>
+                            <td colspan="6" class="text-center">Carregando clientes...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Página Vendas -->
+        <div id="vendas" class="page">
+            <h2>Gerenciamento de Vendas</h2>
+            <div class="d-flex justify-content-between mb-3">
+                <button id="btnNovaVenda" class="btn btn-danger">
+                    <i class="bi bi-plus-circle"></i> Nova Venda
+                </button>
+                <div class="input-group w-50">
+                    <input type="text" id="searchVenda" class="form-control" placeholder="Buscar venda...">
+                    <button class="btn btn-outline-secondary" type="button">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Data</th>
+                            <th>Cliente</th>
+                            <th>Valor Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vendasTableBody">
+                        <tr>
+                            <td colspan="5" class="text-center">Carregando vendas...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Página Relatórios -->
+        <div id="relatorios" class="page">
+            <h2>Relatórios</h2>
+            
+            <ul class="nav nav-tabs" id="relatoriosTabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#estoqueTab">Estoque</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#livrosMaisVendidosTab">Livros Mais Vendidos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#vendasPorPeriodoTab">Vendas por Período</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="estoqueTab">
+                    <h4>Relatório de Estoque</h4>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Título</th>
+                                    <th>Comprados</th>
+                                    <th>Vendidos</th>
+                                    <th>Estoque Atual</th>
+                                </tr>
+                            </thead>
+                            <tbody id="estoqueTableBody">
+                                <tr>
+                                    <td colspan="5" class="text-center">Carregando dados de estoque...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="livrosMaisVendidosTab">
+                    <h4>Livros Mais Vendidos</h4>
+                    <div class="chart-container">
+                        <canvas id="livrosMaisVendidosChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="tab-pane fade" id="vendasPorPeriodoTab">
+                    <h4>Vendas por Período</h4>
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label for="dataInicio" class="form-label">Data Início</label>
+                            <input type="date" class="form-control" id="dataInicio">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="dataFim" class="form-label">Data Fim</label>
+                            <input type="date" class="form-control" id="dataFim">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button class="btn btn-primary" id="filtrarVendas">Filtrar</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="vendasPorPeriodoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center text-lg-start mt-5">
+        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
+            © 2025 Sistema de Controle de Vendas de Livraria - Seminário 2 - Banco de Dados I
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
