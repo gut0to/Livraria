@@ -1,5 +1,7 @@
-from flask import Blueprint, jsonify, request
-from src.models.user import User, db
+from flask import Flask, send_from_directory, jsonify
+from .models import db
+from .routes.livraria import livraria_bp
+from .routes.user import user_bp 
 
 user_bp = Blueprint('user', __name__)
 
